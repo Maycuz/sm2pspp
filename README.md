@@ -3,6 +3,14 @@ sm2pspp
 
 A **S**nap**m**aker **2**.0 **P**rusa**S**licer **P**ost-**P**rocessor to create compatible files for the Snapmaker terminal.
 
+**Modified to show dimensions with the following starting GCode in PrusaSlicer:**
+```
+; Required for dimensions estimate for sm2pspp
+; max_x = [first_layer_print_size_0]
+; max_y = [first_layer_print_size_1]
+; max_z = {first_layer_height+layer_height*(total_layer_count-1)}
+```
+
 Features
 ========
 
