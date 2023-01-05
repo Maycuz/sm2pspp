@@ -41,6 +41,7 @@ const TCHAR * fmsg[MSG_COUNT] = {
 	/* MSGT_WARN_NO_PLATE_TEMP         */ _T("Warning: Building plate temperature value not found.\n"),
 	/* MSGT_WARN_NO_PRINT_SPEED        */ _T("Warning: Print speed value not found.\n"),
 	/* MSGT_WARN_NO_THUMBNAIL          */ _T("Warning: Thumbnail data not found.\n")
+	/* MSGT_WARN_NO_MAX_SIZE           */ _T("Warning: Size data not found.\n")
 };
 
 
@@ -214,6 +215,9 @@ int processFile(const TCHAR * file, const tCallback cb) {
 	tPToken estTime = {0};
 	tPToken nozzleTemp = {0};
 	tPToken plateTemp = {0};
+	tPToken maxX = {0};
+	tPToken maxY = {0};
+	tPToken maxZ = {0};
 	tPToken printSpeed = {0};
 	tPToken thumbnail = {0};
 	tPToken aToken = {0};
@@ -342,6 +346,12 @@ int processFile(const TCHAR * file, const tCallback cb) {
 					valueToken = &plateTemp;
 				} else if (p_cmpToken(&aToken, "max_print_speed") == 0) {
 					valueToken = &printSpeed;
+				} else if (p_cmpToken(&aToken, "max_x") == 0) {
+					valueToken = &maxX;
+				} else if (p_cmpToken(&aToken, "max_y") == 0) {
+					valueToken = &maxY;
+				} else if (p_cmpToken(&aToken, "max_z") == 0) {
+					valueToken = &maxZ;
 				} else {
 					state = ST_FIND_LINE_START;
 				}
@@ -438,6 +448,9 @@ int processFile(const TCHAR * file, const tCallback cb) {
 	if (plateTemp.start == NULL || plateTemp.length == 0) ON_WARN(MSGT_WARN_NO_PLATE_TEMP);
 	if (printSpeed.start == NULL || printSpeed.length == 0) ON_WARN(MSGT_WARN_NO_PRINT_SPEED);
 	if (thumbnail.start == NULL || thumbnail.length == 0) ON_WARN(MSGT_WARN_NO_THUMBNAIL);
+	if (maxX.start == NULL || maxX.length == 0) ON_WARN(MSGT_WARN_NO_MAX_SIZE);
+	if (maxY.start == NULL || maxY.length == 0) ON_WARN(MSGT_WARN_NO_MAX_SIZE);
+	if (maxZ.start == NULL || maxZ.length == 0) ON_WARN(MSGT_WARN_NO_MAX_SIZE);
 	
 	/* re-create file */
 	fp = _tfopen(file, _T("wb"));
@@ -479,9 +492,9 @@ int processFile(const TCHAR * file, const tCallback cb) {
 	fprintf(fp, ";nozzle_temperature(°C): %.0f\n", p_float(&nozzleTemp));
 	fprintf(fp, ";build_plate_temperature(°C): %.0f\n", p_float(&plateTemp));
 	fprintf(fp, ";work_speed(mm/minute): %.0f\n", p_float(&printSpeed) * 60.0f);
-	fprintf(fp, ";max_x(mm): 0\n"); /* not set by Snapmaker Luban */
-	fprintf(fp, ";max_y(mm): 0\n"); /* not set by Snapmaker Luban */
-	fprintf(fp, ";max_z(mm): 0\n"); /* not set by Snapmaker Luban */
+	fprintf(fp, ";max_x(mm): %.2f\n", p_float(&maxX));
+	fprintf(fp, ";max_y(mm): %.2f\n", p_float(&maxY));
+	fprintf(fp, ";max_z(mm): %.2f\n", p_float(&maxZ));
 	fprintf(fp, ";min_x(mm): 0\n"); /* not set by Snapmaker Luban */
 	fprintf(fp, ";min_y(mm): 0\n"); /* not set by Snapmaker Luban */
 	fprintf(fp, ";min_z(mm): 0\n\n"); /* not set by Snapmaker Luban */
