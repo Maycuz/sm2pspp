@@ -10,7 +10,7 @@ SYS := $(shell $(CC) -dumpmachine)
 ifneq (, $(findstring linux, $(SYS)))
  include src/linux.mk
 else
- ifneq (, $(findstring darwin, $(SYS)))
+ ifneq (, $(findstring arm64-apple-darwin, $(SYS)))
   include src/macos_arm.mk
  else
   ifneq (, $(findstring mingw, $(SYS))$(findstring windows, $(SYS)))
