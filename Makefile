@@ -10,10 +10,14 @@ SYS := $(shell $(CC) -dumpmachine)
 ifneq (, $(findstring linux, $(SYS)))
  include src/linux.mk
 else
- ifneq (, $(findstring mingw, $(SYS))$(findstring windows, $(SYS)))
-  include src/mingw.mk
+ ifneq (, $(findstring darwin, $(SYS)))
+  include src/macos_arm.mk
  else
-  include src/general.mk
+  ifneq (, $(findstring mingw, $(SYS))$(findstring windows, $(SYS)))
+   include src/mingw.mk
+  else
+   include src/general.mk
+  endif
  endif
 endif
 

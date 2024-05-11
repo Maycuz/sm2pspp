@@ -333,8 +333,14 @@ int processFile(const TCHAR * file, const int check, const tCallback cb) {
 	if (fp == NULL) ON_ERROR(MSGT_ERR_FILE_OPEN);
 
 	/* get file size */
-	fseeko64(fp, 0, SEEK_END);
-	inputLen = (size_t)ftello64(fp);
+	#ifdef MACOS_ARM64
+		fseek(fp, 0, SEEK_END);
+		inputLen = (size_t)ftello(fp);
+	#else
+		fseeko64(fp, 0, SEEK_END);
+		inputLen = (size_t)ftello64(fp);
+	#endif
+	
 	if (inputLen < 1) goto onSuccess;
 	fseek(fp, 0, SEEK_SET);
 
